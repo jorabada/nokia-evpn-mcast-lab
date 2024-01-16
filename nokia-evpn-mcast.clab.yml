@@ -1,0 +1,110 @@
+name: evpn-mcast
+
+topology:
+  kinds:
+    srl:
+      image: srlinux:latest
+    vr-sros:
+      image: registry.srlinux.dev/pub/vr-sros:23.10.R2
+      license: ./license/sros.lic 
+    linux:
+      image: ghcr.io/hellt/network-multitool
+
+  nodes:
+    dcgw1:
+      kind: vr-sros
+      type: sr-1
+      startup-config: ./configs/dcgw1.cfg
+
+    dcgw2:
+      kind: vr-sros
+      type: sr-1
+      startup-config: ./configs/dcgw2.cfg
+
+    spine1:
+      kind: srl
+      type: ixrd3
+      startup-config: ./configs/spine1.cfg
+
+    spine2:
+      kind: srl
+      type: ixrd3
+      startup-config: ./configs/spine2.cfg
+
+    leaf1:
+      kind: srl
+      type: ixrd2
+      startup-config: ./configs/leaf1.cfg
+
+    leaf2:
+      kind: srl
+      type: ixrd2
+      startup-config: ./configs/leaf2.cfg
+
+    leaf3:
+      kind: srl
+      type: ixrd2
+      startup-config: ./configs/leaf3.cfg
+
+    leaf4:
+      kind: srl
+      type: ixrd2
+      startup-config: ./configs/leaf4.cfg
+
+    switch1:
+      kind: srl
+      type: ixrd2
+      startup-config: ./configs/sw1.cfg
+
+    switch2:
+      kind: srl
+      type: ixrd2
+      startup-config: ./configs/sw2.cfg
+
+    client1:
+      kind: linux
+      exec:
+        - ip link add link eth1 name eth1.1 type vlan id 1
+        - ip link set eth1.1 up
+        - ip addr add 192.168.1.10/24 dev eth1.1
+
+    client2:
+      kind: linux
+      binds:
+        - ./configs/eth1.sh:/tmp/eth1.sh
+      exec:
+        - bash /tmp/eth1.sh
+        - ip addr add 192.168.1.20/24 dev bond0.1
+
+    client3:
+      kind: linux
+      exec:
+        - ip link add link eth1 name eth1.1 type vlan id 1
+        - ip link set eth1.1 up
+        - ip addr add 192.168.1.30/24 dev eth1.1
+
+  links:
+    - endpoints: ["dcgw1:eth1", "spine1:e1-31"]
+    - endpoints: ["dcgw1:eth2", "spine2:e1-31"]
+    - endpoints: ["dcgw2:eth1", "spine1:e1-32"]
+    - endpoints: ["dcgw2:eth2", "spine2:e1-32"]
+
+    - endpoints: ["spine1:e1-11", "leaf1:e1-51"]
+    - endpoints: ["spine1:e1-12", "leaf2:e1-51"]
+    - endpoints: ["spine1:e1-13", "leaf3:e1-51"]
+    - endpoints: ["spine1:e1-14", "leaf4:e1-51"]
+
+    - endpoints: ["spine2:e1-11", "leaf1:e1-52"]
+    - endpoints: ["spine2:e1-12", "leaf2:e1-52"]
+    - endpoints: ["spine2:e1-13", "leaf3:e1-52"]
+    - endpoints: ["spine2:e1-14", "leaf4:e1-52"]
+
+    - endpoints: ["leaf1:e1-1", "switch1:e1-51"]
+    - endpoints: ["leaf2:e1-1", "switch1:e1-52"]
+    - endpoints: ["leaf1:e1-2", "switch2:e1-51"]
+    - endpoints: ["leaf2:e1-2", "switch2:e1-52"]
+
+    - endpoints: ["leaf3:e1-1", "client2:eth1"]
+    - endpoints: ["leaf4:e1-1", "client2:eth2"]
+    - endpoints: ["switch1:e1-1", "client1:eth1"]
+    - endpoints: ["switch2:e1-1", "client3:eth1"]
