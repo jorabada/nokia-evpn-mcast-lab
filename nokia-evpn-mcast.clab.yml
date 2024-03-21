@@ -5,7 +5,7 @@ topology:
     srl:
       image: srlinux:latest
     vr-sros:
-      image: registry.srlinux.dev/pub/vr-sros:23.10.R2
+      image: registry.srlinux.dev/pub/vr-sros:23.10.R1
       license: ./license/sros.lic 
     linux:
       image: ghcr.io/hellt/network-multitool
@@ -15,7 +15,6 @@ topology:
       kind: vr-sros
       type: sr-1
       startup-config: ./configs/dcgw1.cfg
-
     dcgw2:
       kind: vr-sros
       type: sr-1
