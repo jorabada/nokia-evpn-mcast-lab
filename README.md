@@ -1204,6 +1204,35 @@ A:leaf1# info from state network-instance "MAC-VRF 1" protocols igmp-snooping
         }
     }
 </pre> 
+
+There is a new show report added with the format ```show network-instance <name> multicast-forwarding-information-base``` so that the (S,G) groups and their OIFs are shown in a convenient format. As an example, on LEAF1:
+<pre>
+--{ candidate shared default }--[ network-instance "MAC-VRF 1" ]--
+A:leaf1# show multicast-forwarding-information-base
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+IPv4 multicast FIB of network instance MAC-VRF 1
+-----------------------------------------------------------------------------------------------------------------------------------------------------
++---------------------+---------------------+-----------------------------------------+---------------------+-----------------+-------------------+
+|       Source        |        Group        |                OIF list                 |       Forward       |    Line card    |    Last Update    |
+|                     |                     |                                         |                     |   Replication   |                   |
+|                     |                     |                                         |                     |      Index      |                   |
++=====================+=====================+=========================================+=====================+=================+===================+
+| 0.0.0.0             | 0.0.0.0             |                                         |                     | 1               | 5h52m8s ago       |
+| 0.0.0.0             | 239.0.0.20          | ethernet-1/1.1                          | True                | 2               | 5h52m6s ago       |
+|                     |                     | ethernet-1/2.1                          | True                |                 |                   |
+|                     |                     | vxlan:10.0.0.12:1                       | True                |                 |                   |
+|                     |                     |                                         |                     |                 |                   |
+| 0.0.0.0             | 239.0.0.31          | ethernet-1/1.1                          | True                | 3               | 5h52m4s ago       |
+|                     |                     | ethernet-1/2.1                          | True                |                 |                   |
+|                     |                     | vxlan:10.0.0.12:1                       | True                |                 |                   |
+|                     |                     |                                         |                     |                 |                   |
++---------------------+---------------------+-----------------------------------------+---------------------+-----------------+-------------------+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+IPv4 routes total       : 3
+IPv6 routes total       : 0
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+</pre>
+
 Example of the trace information in LEAF1:
 <pre> 
 A:leaf1# bash viewlog -e igmp -t
