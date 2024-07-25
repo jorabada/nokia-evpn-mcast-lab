@@ -5,7 +5,7 @@ topology:
     srl:
       image: srlinux:latest
     vr-sros:
-      image: registry.srlinux.dev/pub/vr-sros:23.10.R1
+      image: registry.srlinux.dev/pub/vr-sros:latest
       license: ./license/sros.lic 
     linux:
       image: ghcr.io/hellt/network-multitool
