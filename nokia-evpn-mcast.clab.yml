@@ -14,11 +14,11 @@ topology:
     dcgw1:
       kind: vr-sros
       type: sr-1
-      startup-config: ./configs/dcgw1.cfg
+      startup-config: ./configs/dcgw1.partial.cfg
     dcgw2:
       kind: vr-sros
       type: sr-1
-      startup-config: ./configs/dcgw2.cfg
+      startup-config: ./configs/dcgw2.partial.cfg
 
     spine1:
       kind: srl
