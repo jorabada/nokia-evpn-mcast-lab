@@ -8,7 +8,7 @@ topology:
       image: registry.srlinux.dev/pub/vr-sros:latest
       license: ./license/sros.lic 
     linux:
-      image: ghcr.io/hellt/network-multitool
+      image: troglobit/mcjoin
 
   nodes:
     dcgw1:
